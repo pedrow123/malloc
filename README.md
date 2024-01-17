@@ -1,0 +1,2 @@
+- Essa implementação foi feita para disciplina de Software Básico.
+- Foi realizado em dupla com meu amigo Diogo Almeida.
