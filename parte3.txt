@@ -1,0 +1,55 @@
+1. Se você pudesse voltar no tempo, o que você (de hoje) recomendaria ao você (do primeiro dia de aula de Software Básico) para minimizar
+o sofrimento do desenvolvimento deste trabalho?
+Resposta: Fazer mais exercícios conforme o desenvolvimento da disciplina; não deixar para estudar o conteúdo somente antes da prova, e sim durante o semestre todo;
+praticar assembly desde o começo.
+
+2. O que você recomendaria ao professor da disciplina quando ele se preparar para o próximo semestre remoto a fim de aumentar o grau de
+absorção do conteúdo da disciplina por parte dos alunos?
+Resposta: Fazer mais exercícios com solução do conteúdo durante as aulas, por exemplo a construção da pilha e gerenciamento da heap.
+Fazer pequenos trabalhos para serem considerados na nota e para servirem como exercícios.
+
+3. Explique quais os trechos de código e quais as principais alterações que você fez para que a segunda parte funcionasse , ou indique
+o motivo de você não ter conseguido terminar alteração. Indique, por exemplo, Quais as linhas de código que você mudou e com qual objetivo.
+Resposta: No nosso código, há uma função auxiliar do alocaMem chamada procuraBlocoLivre que procura um bloco de memória livre, caso encontre
+retorna o endereço em %rax, caso contrário retorna 0. A mudança do código está nessa função.
+No código alterado, ao invés de parar o laço quando encontrar o primeiro espaço vazio, foi criado uma extensão de código para fazer as seguintes
+tarefas:
+    - Se for o primeiro bloco livre encontrado, salva o endereço em %rdx
+    - Nos outros blocos livres, compara o tamanho do bloco livre encontrado com o tamanho do bloco de %rdx. Se o bloco livre encontrado for maior,
+    o valor do endereço de %rdx é atualizado
+Dessa forma, garantimos que o bloco livre encontrado será o maior possível (worst fit).
+O código a seguir faz essa verificação (diferente do Original):
+
+---------------- CÓDIGO ALTERADO ----------------
+# Achou bloco livre, retorna endereço se for maior
+LoopAchou_ProcuraBlocoLivre:
+    movq (%rax), %rbx  # rbx = tamaho bloco rax
+    subq $8, %rax
+
+    # salva se for o primeiro
+    cmpq $0, %rdx
+    je salva_maior_rdx
+
+    # salva se for maior e não for o primeiro
+    addq $8, %rdx
+    movq (%rdx), %r15
+    subq $8, %rdx
+    cmpq %rbx, %r15
+    jl salva_maior_rdx
+    jmp continua
+salva_maior_rdx:
+    movq %rax, %rdx
+
+continua:
+    # vai para o próximo bloco
+    addq $8, %rax
+    movq (%rax), %rbx
+    addq $8, %rax
+    addq %rbx, %rax
+    jmp loop_ProcuraBlocoLivre
+
+---------------- CÓDIGO ORIGINAL ----------------
+# Achou bloco livre, retorna o endereço de memória
+fimLoopAchou_ProcuraBlocoLivre:
+    subq $8, %rax
+    ret

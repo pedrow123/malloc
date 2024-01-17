@@ -1,0 +1,1 @@
+Tentamos colocar printf dentro do avalia.c, mas começou a dar problemas, logo deixamos o arquivo como está.

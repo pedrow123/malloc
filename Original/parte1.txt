@@ -1,0 +1,1 @@
+Tivemos problemas ao usar o printf dentro do código assembly. Por isso usamos o write para imprimir o mapa.
